@@ -22,9 +22,9 @@ theme_id = 0
 
 # ================= SCREEN =================
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Snake Game (Pygame Edition)")
+pygame.display.set_caption("Snake Game Deluxe")
 clock = pygame.time.Clock()
-font = pygame.font.SysFont("consolas", 28)
+font = pygame.font.SysFont("consolas", 26)
 big_font = pygame.font.SysFont("consolas", 48)
 
 # ================= SOUND =================
@@ -46,6 +46,31 @@ def random_pos():
         random.randrange(0, HEIGHT, CELL)
     )
 
+def draw_gradient_bg(color1, color2):
+    for y in range(HEIGHT):
+        ratio = y / HEIGHT
+        r = int(color1[0] * (1 - ratio) + color2[0] * ratio)
+        g = int(color1[1] * (1 - ratio) + color2[1] * ratio)
+        b = int(color1[2] * (1 - ratio) + color2[2] * ratio)
+        pygame.draw.line(screen, (r, g, b), (0, y), (WIDTH, y))
+
+def glow_rect(x, y, w, h, color, glow=8):
+    for i in range(glow, 0, -1):
+        s = pygame.Surface((w + i * 2, h + i * 2), pygame.SRCALPHA)
+        pygame.draw.rect(
+            s,
+            (*color, 15),
+            (0, 0, w + i * 2, h + i * 2),
+            border_radius=12
+        )
+        screen.blit(s, (x - i, y - i))
+
+def draw_grid():
+    for x in range(0, WIDTH, CELL):
+        pygame.draw.line(screen, (255, 255, 255, 20), (x, 0), (x, HEIGHT))
+    for y in range(0, HEIGHT, CELL):
+        pygame.draw.line(screen, (255, 255, 255, 20), (0, y), (WIDTH, y))
+
 # ================= SNAKE =================
 class Snake:
     def __init__(self, x, y, color):
@@ -60,9 +85,11 @@ class Snake:
             self.body.pop()
 
     def draw(self):
-        for i, seg in enumerate(self.body):
-            r = pygame.Rect(seg[0], seg[1], CELL, CELL)
-            pygame.draw.rect(screen, self.color, r, border_radius=6)
+        for seg in self.body:
+            x, y = seg
+            glow_rect(x, y, CELL, CELL, self.color, glow=10)
+            r = pygame.Rect(x, y, CELL, CELL)
+            pygame.draw.rect(screen, self.color, r, border_radius=10)
 
     def collision(self):
         head = self.body[0]
@@ -101,7 +128,7 @@ def menu():
     global theme_id
     while True:
         screen.fill((0, 0, 0))
-        draw_text("SNAKE GAME", big_font, (255, 255, 255), WIDTH//2, 120)
+        draw_text("SNAKE DELUXE", big_font, (255, 255, 255), WIDTH//2, 120)
         draw_text("1 - Single Player", font, (200, 200, 200), WIDTH//2, 240)
         draw_text("2 - AI Snake", font, (200, 200, 200), WIDTH//2, 280)
         draw_text("3 - Multiplayer", font, (200, 200, 200), WIDTH//2, 320)
@@ -111,15 +138,20 @@ def menu():
 
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
-                pygame.quit(); sys.exit()
+                pygame.quit()
+                sys.exit()
             if e.type == pygame.KEYDOWN:
-                if e.key == pygame.K_1: return "SINGLE"
-                if e.key == pygame.K_2: return "AI"
-                if e.key == pygame.K_3: return "MULTI"
+                if e.key == pygame.K_1:
+                    return "SINGLE"
+                if e.key == pygame.K_2:
+                    return "AI"
+                if e.key == pygame.K_3:
+                    return "MULTI"
                 if e.key == pygame.K_t:
                     theme_id = (theme_id + 1) % len(THEMES)
                 if e.key == pygame.K_ESCAPE:
-                    pygame.quit(); sys.exit()
+                    pygame.quit()
+                    sys.exit()
 
 # ================= GAME =================
 def game(mode):
@@ -132,26 +164,36 @@ def game(mode):
 
     while True:
         clock.tick(FPS)
-        screen.fill(theme["bg"])
+
+        draw_gradient_bg(theme["bg"], (0, 0, 0))
+        draw_grid()
 
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
-                pygame.quit(); sys.exit()
+                pygame.quit()
+                sys.exit()
             if e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_ESCAPE:
                     return
-                if e.key == pygame.K_w: snake1.dir = (0, -CELL)
-                if e.key == pygame.K_s: snake1.dir = (0, CELL)
-                if e.key == pygame.K_a: snake1.dir = (-CELL, 0)
-                if e.key == pygame.K_d: snake1.dir = (CELL, 0)
+                if e.key == pygame.K_w:
+                    snake1.dir = (0, -CELL)
+                if e.key == pygame.K_s:
+                    snake1.dir = (0, CELL)
+                if e.key == pygame.K_a:
+                    snake1.dir = (-CELL, 0)
+                if e.key == pygame.K_d:
+                    snake1.dir = (CELL, 0)
 
                 if snake2:
-                    if e.key == pygame.K_UP: snake2.dir = (0, -CELL)
-                    if e.key == pygame.K_DOWN: snake2.dir = (0, CELL)
-                    if e.key == pygame.K_LEFT: snake2.dir = (-CELL, 0)
-                    if e.key == pygame.K_RIGHT: snake2.dir = (CELL, 0)
+                    if e.key == pygame.K_UP:
+                        snake2.dir = (0, -CELL)
+                    if e.key == pygame.K_DOWN:
+                        snake2.dir = (0, CELL)
+                    if e.key == pygame.K_LEFT:
+                        snake2.dir = (-CELL, 0)
+                    if e.key == pygame.K_RIGHT:
+                        snake2.dir = (CELL, 0)
 
-        # AI
         if mode == "AI":
             snake1.dir = ai_direction(snake1, food)
 
@@ -162,11 +204,13 @@ def game(mode):
                 food = random_pos()
                 grow = True
                 score += 10
-                if eat_sound: eat_sound.play()
+                if eat_sound:
+                    eat_sound.play()
 
             snake1.move(grow)
             if snake1.collision():
-                if gameover_sound: gameover_sound.play()
+                if gameover_sound:
+                    gameover_sound.play()
                 return
 
             if snake2:
@@ -174,11 +218,25 @@ def game(mode):
                 if snake2.collision() or snake2.body[0] in snake1.body:
                     return
 
-        # Draw
-        pygame.draw.rect(screen, theme["food"], (*food, CELL, CELL), border_radius=6)
+        # Food
+        glow_rect(food[0], food[1], CELL, CELL, theme["food"], glow=12)
+        pygame.draw.circle(
+            screen,
+            theme["food"],
+            (food[0] + CELL // 2, food[1] + CELL // 2),
+            CELL // 2
+        )
+
         snake1.draw()
-        if snake2: snake2.draw()
-        draw_text(f"Score: {score}", font, (255, 255, 255), 10, 10, center=False)
+        if snake2:
+            snake2.draw()
+
+        # Score Panel
+        panel = pygame.Surface((180, 50), pygame.SRCALPHA)
+        pygame.draw.rect(panel, (0, 0, 0, 140), (0, 0, 180, 50), border_radius=15)
+        screen.blit(panel, (10, 10))
+        draw_text(f"Score: {score}", font, (255, 255, 255), 100, 35)
+
         pygame.display.flip()
 
 # ================= MAIN =================
