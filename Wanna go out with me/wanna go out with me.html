@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insta Date</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body{
+   font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    height: 100vh; /* Set the height to 100% of the viewport height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom, #16dcd6, #03438c); /* Adjust the colors as needed */
+    transition: background 1s ease; /* Set the transition duration and timing function */
+  }
+  h1{
+    color: #ffffff;
+  }
+  img{
+   padding-left: 40%;
+   top: 20px;
+   right: 20px;
+  }
+ .btn{
+    margin-left: 31%; 
+ }
+ .btn1{
+  position: relative;
+    margin-right: 25%;
+    border-radius: 5px;
+    height: 25px;
+    width: 45px;
+   box-shadow: 2px  3px  0px black;
+   background-color: #eb6eca;
+ }
+ .btn1:hover{
+  box-shadow: 4px 3px 0px black;
+  height: 27px;
+  width: 45px;
+ }
+ .btn2{
+  position: relative;
+  left: 0;
+  transition:  0.5s ease;
+   border-radius: 5px; 
+   height: 25px;
+   width: 45px;
+   box-shadow: 2px  3px  0px rgb(0, 6, 92);
+   background-color: #da6b9f;
+ }
+ .hidden{
+  display: none;
+ }
+    </style>
+</head>
+<body>
+    <div class="bg">
+  <h1>Do You Wanna Go Out With Me ?</h1><br>
+  <img src="5UKD.gif" alt="please " id="mainImage">
+  <div class="btn" ><button class="btn1" onclick="changeImage()">Yes</button>
+  <button class="btn2" onmouseover="change() " onclick="hideButtons()">No</button></div>
+ <script>
+    function change(){
+    var button=document.querySelector(".btn2")
+    var randomX=Math.floor(Math.random()* 500)
+    var randomY=Math.floor(Math.random()* 500)
+    button.style.left=randomX+"px";
+    button.style.bottom=randomY+"px";
+  }
+  function changeImage() {
+            var mainImage = document.getElementById("mainImage");
+            mainImage.src ="WG8T.gif" // Replace with the path to your new image
+            hideButtons();
+        }
+        function hideButtons() {
+            var btn1 = document.querySelector('.btn1');
+        var btn2 = document.querySelector('.btn2');
+        btn1.classList.add('hidden');
+        btn2.classList.add('hidden');
+        }
+ </script>
+    </div>
+</body>
+</html>
