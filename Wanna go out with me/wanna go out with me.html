@@ -58,9 +58,9 @@
 </head>
 <body>
     <div class="bg">
-  <h1>Do You Wanna Go Out With Me ?</h1><br>
+  <h1 id="textElement">Do You Wanna Go Out With Me ?</h1><br>
   <img src="5UKD.gif" alt="please " id="mainImage">
-  <div class="btn" ><button class="btn1" onclick="changeImage()">Yes</button>
+  <div class="btn" ><button class="btn1" onclick="changeImage(); changeText()">Yes</button>
   <button class="btn2" onmouseover="change() " onclick="hideButtons()">No</button></div>
  <script>
     function change(){
@@ -80,6 +80,10 @@
         var btn2 = document.querySelector('.btn2');
         btn1.classList.add('hidden');
         btn2.classList.add('hidden');
+        }
+        function changeText() {
+            var textElement = document.getElementById("textElement");
+            textElement.innerHTML = "Great! I knew it😍😍";
         }
  </script>
     </div>
