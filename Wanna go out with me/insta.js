@@ -5,12 +5,16 @@ function change(){
     button.style.left=randomX+"px";
     button.style.bottom=randomY+"px";
   }
-  function changeImage() {
+function changeImage() {
             var mainImage = document.getElementById("mainImage");
             mainImage.src ="WG8T.gif" // Replace with the path to your new image
             hideButtons();
         }
-        function hideButtons() {
+function changeText() {
+            var textElement = document.getElementById("textElement");
+            textElement.innerHTML = "Great! I knew it😍😍.";
+        }
+function hideButtons() {
             var btn1 = document.querySelector('.btn1');
         var btn2 = document.querySelector('.btn2');
         btn1.classList.add('hidden');
